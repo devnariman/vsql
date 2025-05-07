@@ -15,8 +15,31 @@ Vsql::Vsql(std::string DBname)
 
 //-----------------------------------------------
 
+// Add a row to a table
+CreateTableSIGNAL Vsql::add_row(std::string &nt_dev, std::map<std::string, std::string> &valus) {
+
+	std::cout << nt_dev << std::endl;
+	
+	for (const auto& pair : valus) {
+		std::cout << pair.first << " => " << pair.second << std::endl;
+	}
+
+
+	// command :
+	// 
+	// INSERT INTO students (name, age, major) VALUES ('Ali', 21, 'Computer Science');
+	//                               |                             |
+	//                             first                         value
+	//
+
+
+
+	return 0;
+}
+
+
 // Add a field to a table
-CreateTableSIGNAL Vsql::Add_Field(std::string table_name, std::string field_name, FieldType typeSQL, std::string default_var, int len) {
+CreateTableSIGNAL Vsql::Add_Field(std::string table_name, std::string field_name, FieldType typeSQL, int len, std::string default_var) {
 	SQLcommand command = Add_Field_Command;
 	std::string temp_str_type = SQLtype[typeSQL];
 	std::string SQLc = commands[command];
@@ -160,6 +183,10 @@ std::string Vsql::Empty_status() {
 		return "False";
 	}
 }
+
+
+
+//-----------------------------------------------
 
 // Destructor: close database and finalize statement
 Vsql::~Vsql()

@@ -43,9 +43,10 @@ public:
 	CreateTableSIGNAL Add_Field(std::string table_name, // add new column to table
 		std::string field_name,
 		FieldType typeSQL,
-		std::string default_var = Def_var,
-		int len = 0);
-
+		int len = 0,
+		std::string default_var = Def_var);
+	CreateTableSIGNAL add_row(std::string&, std::map<std::string, std::string>&);
+		
 private:
 	// SQLite database variables
 	sqlite3* db;                     // database pointer
