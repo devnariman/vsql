@@ -1,0 +1,12 @@
+﻿  Source.cpp
+X:\VisualStudio\vsql\vsql\Source.cpp(14,5): warning C4834: discarding return value of function with 'nodiscard' attribute
+  Vsql.cpp
+X:\VisualStudio\vsql\vsql\Vsql.cpp(43,45): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned short', possible loss of data
+X:\VisualStudio\vsql\vsql\Vsql.cpp(46,27): warning C4267: '=': conversion from 'size_t' to 'unsigned short', possible loss of data
+X:\VisualStudio\vsql\vsql\Vsql.cpp(49,29): warning C4267: '=': conversion from 'size_t' to 'unsigned short', possible loss of data
+X:\VisualStudio\vsql\vsql\Vsql.cpp(52,60): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned short', possible loss of data
+X:\VisualStudio\vsql\vsql\Vsql.cpp(104,9): warning C4553: '==': result of expression not used; did you intend '='?
+X:\VisualStudio\vsql\vsql\Vsql.cpp(107,9): warning C4553: '==': result of expression not used; did you intend '='?
+X:\VisualStudio\vsql\vsql\Vsql.cpp(115,20): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  vsql.vcxproj -> X:\VisualStudio\vsql\Debug\vsql.exe
