@@ -6,18 +6,12 @@
 #include <map>
 #include <vector>
 #define CreateTableSIGNAL unsigned short int
+#define Def_var "none_def"
 class Vsql
 {
 public:
 	Vsql(std::string DBname);
 	~Vsql();
-	
-	// functional
-	std::string Connection_Test();
-	std::string Empty_status();
-	void show_All_TableName();
-	std::vector<std::string> get_All_TableName();
-
 	// enum Field type
 	enum FieldType {
 		Integer,
@@ -36,8 +30,15 @@ public:
 		boolean,
 		bit,
 	};
+	// functional
+	std::string Connection_Test();
+	std::string Empty_status();
+	void show_All_TableName();
+	std::vector<std::string> get_All_TableName();
+	CreateTableSIGNAL Add_Field(std::string table_name, std::string field_name, FieldType typeSQL, std::string default_var = Def_var, int len = 0);
 
-	CreateTableSIGNAL Add_Field(std::string table_name, std::string field_name, FieldType typeSQL, std::string default_var = "none_def", int len = 0);
+
+	
 
 private:
 	// Variable
@@ -51,9 +52,9 @@ private:
 	int tableCount = 0;
 	// functional
 	void GetTableName();
-	static int print_result(void* data, int argc, char** argv, char** azColName);
 	void ErrorDetector(std::string);
-	std::vector<std::string> GetAllField_in_thisTable();
+	std::string GetAllField_in_thisTable(std::string);
+	static int callback_GETallField_name(void* data, int argc, char** argv, char** azColName);
 
 
 	// enum and map from sql command

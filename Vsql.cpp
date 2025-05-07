@@ -15,26 +15,6 @@ Vsql::Vsql(std::string DBname)
 }
 //---------------------------------------------------
 
-int Vsql::print_result(void* data, int argc, char** argv, char** azColName) {
-
-	std::string* result = static_cast<std::string*>(data);
-
-	// برای هر ستون در ردیف، نام ستون و مقدار را به رشته اضافه می‌کنیم
-	for (int i = 0; i < argc; i++) {
-		result->append(azColName[i]);
-		result->append(": ");
-		result->append(argv[i] ? argv[i] : "NULL");
-		result->append("\n");
-	}
-
-	result->append("--------------------------\n");
-
-	//std::cout << result << std::endl;
-
-	return 0;
-}
-
-
 CreateTableSIGNAL Vsql::Add_Field(std::string table_name , std::string field_name , FieldType typeSQL , std::string default_var, int len) {
 	SQLcommand command = Add_Field_Command;
 	std::string temp_str_type = SQLtype[typeSQL];
@@ -48,7 +28,10 @@ CreateTableSIGNAL Vsql::Add_Field(std::string table_name , std::string field_nam
 	
 	pos = SQLc.find("type_dev");
 	if (typeSQL == vChar or typeSQL == Char or typeSQL == nChar) {
-		if (len == 0) { return 1; }
+		if (len == 0) {
+			ErrorDetector("We need to know the lenth !");
+			return 1;
+		}
 		CreateTableSIGNAL type_pos = SQLtype[typeSQL].find("(n)");
 		std::ostringstream oss;
 		oss << "(" << len << ")";
@@ -57,11 +40,7 @@ CreateTableSIGNAL Vsql::Add_Field(std::string table_name , std::string field_nam
 	}
 	SQLc.replace(pos, 8, temp_str_type);
 
-	if (default_var == "none_def") {
-		//std::cout << "ok" << std::endl;
-	}
-	else
-	{
+	if (default_var != Def_var) {
 		std::string def = commands[SQLcommand::Default_Value];
 		if (typeSQL == vChar or typeSQL == Char or typeSQL == nChar or typeSQL == text or typeSQL == date or typeSQL == time or typeSQL == dateANDtime or typeSQL == Ntext or typeSQL == year)
 		{
@@ -75,21 +54,45 @@ CreateTableSIGNAL Vsql::Add_Field(std::string table_name , std::string field_nam
 	//std::cout << SQLc << std::endl;
 	ControlerDB = sqlite3_exec(db, cStr, nullptr , nullptr, &errMsg);
 	if (ControlerDB != SQLITE_OK) {
-		/*
-		
-		Error detect from check all field !
-		
-		*/
-
-
+		if (GetAllField_in_thisTable(table_name).find(field_name) != std::string::npos) {
+			ErrorDetector("Field Name is a duplicate !");
+			sqlite3_free(errMsg);
+			return 2;
+		}
 		ErrorDetector("Error in make to Field !");
 		sqlite3_free(errMsg);
-		return 2;
+		return 3;
 	}
 	return 0;
 }
 
+std::string Vsql::GetAllField_in_thisTable(std::string tn_dev) {
 
+	std::string temp = commands[SQLcommand::Get_All_Field_in_this_Table];
+	temp = temp.replace(temp.find("tn_dev"), 6, tn_dev);
+	const char* cStr = temp.c_str();
+
+
+	std::string resultStr;
+	ControlerDB = sqlite3_exec(db, cStr, callback_GETallField_name, &resultStr, &errMsg);
+	if (ControlerDB != SQLITE_OK) {
+		ErrorDetector("problem from GetAllField_in_thisTable !");
+		sqlite3_free(errMsg);
+	}
+	return resultStr;
+}
+
+int Vsql::callback_GETallField_name(void* data, int argc, char** argv, char** azColName) {
+	std::string* outStr = static_cast<std::string*>(data); // تبدیل اشاره‌گر عمومی به string
+
+	for (int i = 0; i < argc; i++) {
+		if (std::string(azColName[i]) == "name" && argv[i]) {
+			*outStr += argv[i]; // اضافه کردن مقدار به رشته
+			*outStr += "\t";    // جداکننده برای خوانایی بیشتر
+		}
+	}
+	return 0;
+}
 
 void Vsql::ErrorDetector(std::string namePlace) {
 	std::cout << "Your error is in the section: " << namePlace << std::endl;
@@ -149,8 +152,6 @@ std::string Vsql::Empty_status() {
 		return "False";
 	}
 }
-
-
 
 
 //---------------------------------------------------
