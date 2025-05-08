@@ -35,6 +35,7 @@ public:
 		bit,
 	};
 
+
 	// Public functions
 	std::string Connection_Test();                      // check if DB is connected
 	std::string Empty_status();                         // check if DB has tables

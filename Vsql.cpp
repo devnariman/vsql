@@ -31,6 +31,7 @@ CreateTableSIGNAL Vsql::add_row(std::string &nt_dev, std::map<std::string, std::
 	//                               |                             |
 	//                             first                         value
 	//
+	  
 
 
 
